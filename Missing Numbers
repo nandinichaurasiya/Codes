@@ -1,0 +1,100 @@
+//logic: 
+//1. sort both the vector and create 2 maps also to store the unique vector's element as key and its count.
+//2. count same type of element(like: 202 is twice then key = 202 and elemenet=2) and insert element as key and count as its elemenet.
+//3. take one by one element from 1st map and search in second map.
+      // If its not present in 2nd map, push that in vecRes(create new vector to print the same elements) and erase it from 1st map.
+      // Else If its present in 2nd map but the number of count is different, then push that in vecRes and erase it from both the maps.
+      // Else (i.e. element is present and number of count is also same), just delete the key from both the map.
+//4. Now if map2'size is not zero, i.e. map2 is having some elements, which were not present in map1, just push those in 'vecRes'.
+//5. sort 'vecRes' and then print.
+
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <map>
+using namespace std;
+
+int main() {
+    /* Enter your code here. Read input from STDIN. Print output to STDOUT */
+    int m, n, count=0;
+    cin >> m;
+    vector<int> vecm(m);
+    generate(vecm.begin(), vecm.end(), []{int temp; cin>>temp; return temp;});
+    sort(vecm.begin(), vecm.end());
+ 
+    cin >> n;
+    vector<int> vecn(n);
+    generate(vecn.begin(), vecn.end(), []{int temp; cin>>temp; return temp;});
+    sort(vecn.begin(), vecn.end());
+    
+    map<int, int> mpm;
+    map<int, int> mpn;
+    map<int, int>::iterator it;
+    map<int, int>::iterator it1;
+    
+    for(int i=0; i<(m-1); i++)
+    {
+        int count = 1;
+        while(vecm[i] == vecm[i+1]){
+            i++;
+            count++;
+        }
+        if(i==(m-2) && vecm[i] != vecm[i+1])
+            mpm.insert(pair<int, int>(vecm[i+1], 1));
+        
+        mpm.insert(pair<int, int>(vecm[i], count));
+    }
+ 
+    for(int i=0; i<(n-1); i++)
+    {
+        int count = 1;
+        while(vecn[i] == vecn[i+1]){
+        i++;
+        count++;
+    }
+        if(i==(n-2) && vecn[i] != vecn[i+1])
+            mpn.insert(pair<int, int>(vecn[i+1], 1));
+        
+        mpn.insert(pair<int, int>(vecn[i], count));
+    }
+     vector<int>vecRes;
+     for(it1=mpm.begin(); it1!=mpm.end(); it1++){
+        int key = it1->first;
+        it = mpn.find(key);
+        if(it == mpm.end()){
+            vecRes.push_back(it1->first);
+            if(!mpm.empty())
+                mpm.erase(key);
+        }
+        else if(it->second != it1->second){
+            vecRes.push_back(it1->first);
+            if(!mpm.empty())
+                mpm.erase(key);
+            if(!mpn.empty())
+                mpn.erase(it->first);
+        }
+        else{
+            if(!mpm.empty() && it1 !=mpm.end())
+                mpm.erase(key);
+            if(!mpn.empty() && it !=mpn.end())
+                mpn.erase(it);
+        }
+    }
+    
+    //IF some elements are there in mpn map, just copy in vecRes
+    for(it1=mpn.begin(); it1!=mpn.end(); it1++){
+        vecRes.push_back(it1->first);
+    }
+    sort(vecRes.begin(), vecRes.end());
+    for(int i=0; i<vecRes.size(); i++){
+        if(i==(vecRes.size()-1)){
+           cout<<vecRes[i];
+            break;
+        }
+        cout<<vecRes[i]<<" ";
+    }
+    
+    return 0;
+}
