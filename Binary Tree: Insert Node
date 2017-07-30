@@ -1,0 +1,68 @@
+//1. Without Recursion
+/*typedef struct node
+{
+   int data;
+   node * left;
+   node * right;
+}node;
+*/
+node * insert(node * root, int value) {
+   node* newnode = new node;
+   newnode->data = value;
+   if(root == NULL)
+       root = newnode;
+   node *temp = root;
+   while(temp->left && value < temp->data){
+       temp = temp->left;}
+   while(temp->right && value > temp->data){
+       temp = temp->right;}
+   while(temp->left && value < temp->data){
+       temp = temp->left;}
+   if(value > temp->data)
+       temp->right = newnode;
+   if(value < temp->data)
+       temp->left = newnode; 
+   return root;
+}
+
+
+//2. Without Recursion
+node * insert(node * root, int value) {
+   node* newnode = new node;
+   newnode->data = value;
+   if(root == NULL)
+       root = newnode;
+   else{
+       node *temp;
+       node *curr = root;
+       while(curr){
+            temp = curr;
+            if(value < curr->data)
+                curr = curr->left;
+            else
+                curr = curr->right;
+       }
+       if(value > temp->data)
+            temp->right = newnode;
+       else
+            temp->left = newnode;
+   }
+   return root;
+}
+
+//3. With Recursion
+node * insert(node * root, int value) {
+   //node* newnode = new node;
+   //newnode->data = value;
+   if(root == NULL){
+       node* newnode = new node;    //You can use commented one(above 2 lines), instead of using here. 
+       newnode->data = value;
+       root = newnode;
+   }
+   else if(value < root->data)
+       root->left = insert(root->left, value);
+   else
+       root->right = insert(root->right, value);
+
+   return root;
+}
