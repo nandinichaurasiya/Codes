@@ -1,0 +1,82 @@
+//There are many logics:
+//Traverse left branch, then root, then right branch.
+//1. If left exist, make Right of each left element, to NULL, So all right of each left element if now NULL. Having only left branch only.
+     //Make recursive call to print each left.
+     //Similarly, If right exist, make Left of each right element, to NULL, So Having only right branch only.
+     //Make recursive call to print each right.
+//2. create a stack count from 0, increment it , if left exist, recursive call to increment to count.
+     //print each element.
+     //decrement count, if right exist, recursive call to decrement to count. Recursive call will take care of printing.
+//3. Using stack(Why using stack, beacuse we want branch to print from bottom to top): put root first, then
+     //while left exist, put that into stack for each left element.
+     //pop each element and print
+     //same for right.
+     
+/*
+struct node
+{
+    int data;
+    node* left;
+    node* right;
+};
+
+*/
+
+//1.
+void topView(node * root) {
+	static int count=0;
+    if(root == NULL)
+        return;
+
+    if (root->left && count>=0) {
+        count++;
+        topView(root->left);
+    }
+
+    printf("%d ", root->data);
+    count--;
+
+    if (root->right && count<0) {
+        count--;
+        topView(root->right);
+    }
+}
+//2.
+void topView(node * root) {
+    if(root == NULL)
+        return;
+
+    if (root->left) {
+        root->left->right = NULL;
+        topView(root->left);
+    }
+
+    printf("%d ", root->data);
+
+    if (root->right) {
+        root->right->left = NULL;
+        topView(root->right);
+    }
+}
+
+//3.
+void topView(node* root) {
+    node *curr = root;
+    stack<node *> st;
+    while(curr != NULL) {
+        st.push(curr);
+        curr = curr->left;
+    }
+    
+    while(!st.empty()){
+        node *node = st.top();
+        st.pop();
+        cout<<(node->data)<<" ";
+    }
+    
+    curr = root->right;
+    while(curr != NULL){
+        cout<<(curr->data)<<" ";
+        curr = curr->right;
+    }
+}
