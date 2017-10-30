@@ -1,0 +1,35 @@
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+//4, 6, 5, 3, 3, 3, 1  ==> answer 4, 3, 3   //each pair should have difference <=1.
+int main(){
+    int n;
+    cin >> n;
+    vector<int> a(n);
+	vector<int> b;
+    vector<int> res;
+    for(int a_i = 0;a_i < n;a_i++){
+       cin >> a[a_i];
+    }
+	int temp, count, max;
+	count = max = 1;
+	sort(a.begin(), a.end(), [](int x, int y){return x>y;});
+	for(int i=0; i<n; i++)
+	{
+        for(int j=i+1; j<n; j++){
+			    if((a[i]-a[j])<=1)
+            {	count++;
+            }
+		}
+		if(count>max)
+			max = count;
+		count = 1;
+    }    
+    cout<<max;
+    
+    return 0;
+}
